@@ -8,7 +8,9 @@ import Profile from './pages/engineer/Profile';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
-
+import EngineerDashboard from './pages/engineer/EngineerDashboard';
+import AvailabilityPlanning from './pages/manager/AvailabilityPlanning'; // Create this if not exists
+import SearchFilter from './pages/manager/SearchFilter';
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -28,10 +30,12 @@ const App = () => {
         <Route path="/manager/assign" element={<CreateAssignment />} />
         <Route path="/manager/projects" element={<ProjectManagement />} />
         <Route path="/manager/analytics" element={<AnalyticsDashboard />} />
-
+        <Route path="/manager/availability" element={<AvailabilityPlanning />} />
+        <Route path="/manager/search" element={<SearchFilter />} />
         {/* Engineer Routes */}
         <Route path="/engineer/assignments" element={<MyAssignments />} />
         <Route path="/engineer/profile" element={<Profile />} />
+        <Route path="/engineer/dashboard" element={<EngineerDashboard />} />
       </Routes>
     </Router>
   );
