@@ -1,22 +1,56 @@
-import { useForm } from 'react-hook-form';
-import api from '../lib/api';
-import { useAuth } from '../store/authStore';
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-export default function Login() {
-  const { register, handleSubmit } = useForm();
-  const setAuth = useAuth((s) => s.setAuth);
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const role = new URLSearchParams(location.search).get("role");
 
-  const onSubmit = async (data: any) => {
-    const res = await api.post('/auth/login', data);
-    setAuth(res.data.token, res.data.user);
-    window.location.href = res.data.user.role === 'manager' ? '/manager' : '/engineer';
+  const handleLogin = () => {
+    const user = { email, role };
+    localStorage.setItem("user", JSON.stringify(user));
+    if (role === "manager") navigate("/manager/overview");
+    else if (role === "engineer") navigate("/engineer/assignments");
+    else navigate("/");
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-sm mx-auto p-4 space-y-4">
-      <input placeholder="Email" {...register('email')} className="border w-full p-2" />
-      <input type="password" placeholder="Password" {...register('password')} className="border w-full p-2" />
-      <button className="bg-blue-600 text-white w-full py-2">Login</button>
-    </form>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+      <div className="w-80 p-6 bg-gray-100 rounded-lg shadow-lg">
+        <h2 className="text-xl font-bold text-center mb-4">
+          Login as {role?.toUpperCase()}
+        </h2>
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-2 mb-3 border rounded"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 mb-4 border rounded"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          onClick={handleLogin}
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
+          Login
+        </button>
+        <button
+          onClick={() => navigate("/")}
+          className="mt-4 text-sm text-blue-500 hover:underline"
+        >
+          ← Back to Home
+        </button>
+      </div>
+    </div>
   );
-}
+};
+
+export default Login;

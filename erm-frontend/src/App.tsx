@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AnalyticsDashboard from './pages/manager/AnalyticsDashboard';
 import TeamOverview from './pages/manager/TeamOverview';
 import CreateAssignment from './pages/manager/CreateAssignment';
@@ -6,16 +6,21 @@ import ProjectManagement from './pages/manager/Projectmanagement';
 import MyAssignments from './pages/engineer/MyAssignments';
 import Profile from './pages/engineer/Profile';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
+
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const role = user?.role || null;
 
   return (
     <Router>
-      {user && <Navbar role={user.role} />}
+      {/* Show navbar only if user is logged in */}
+      {user && <Navbar role={role} />}
+
       <Routes>
-        <Route path="/" element={<Navigate to={user ? (user.role === 'manager' ? '/manager/overview' : '/engineer/assignments') : '/login'} />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
 
         {/* Manager Routes */}
