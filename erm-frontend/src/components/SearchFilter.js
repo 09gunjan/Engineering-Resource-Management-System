@@ -1,0 +1,5 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+const SearchFilter = ({ onSearchChange, onSkillChange, onStatusChange, skills = [], statuses = ["available", "partially available", "fully allocated"], }) => {
+    return (_jsxs("div", { className: "flex flex-col md:flex-row gap-4", children: [_jsx("input", { type: "text", placeholder: "Search by name...", className: "p-2 border rounded w-full", onChange: (e) => onSearchChange(e.target.value) }), _jsxs("select", { className: "p-2 border rounded w-full", defaultValue: "", onChange: (e) => onSkillChange(e.target.value), children: [_jsx("option", { value: "", children: "All Skills" }), skills.map((skill, idx) => (_jsx("option", { value: skill, children: skill }, idx)))] }), _jsxs("select", { className: "p-2 border rounded w-full", defaultValue: "", onChange: (e) => onStatusChange(e.target.value), children: [_jsx("option", { value: "", children: "All Statuses" }), statuses.map((status, idx) => (_jsx("option", { value: status, children: status }, idx)))] })] }));
+};
+export default SearchFilter;

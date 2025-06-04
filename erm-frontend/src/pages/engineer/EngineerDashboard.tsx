@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from "../../lib/api";
 
-
-
 interface Assignment {
   id: number;
   project: {
@@ -13,6 +11,8 @@ interface Assignment {
   allocationPercentage: number;
   role: string;
 }
+
+
 
 export default function EngineerDashboard() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);

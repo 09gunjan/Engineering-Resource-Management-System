@@ -1,56 +1,58 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { useAuthStore } from "../store/authStore";
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+function Login() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const role = new URLSearchParams(location.search).get("role");
+  const [searchParams] = useSearchParams(); // 👈 get role from URL
+  const role = searchParams.get("role");     // ?role=manager or ?role=engineer
 
-  const handleLogin = () => {
-    const user = { email, role };
-    localStorage.setItem("user", JSON.stringify(user));
-    if (role === "manager") navigate("/manager/overview");
-    else if (role === "engineer") navigate("/engineer/assignments");
-    else navigate("/");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useAuthStore();
+
+  // Login.tsx
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const success = await login(email, password);
+    if (success) {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+  
+      // Navigate with full layout path
+      if (user.role === "manager") {
+        navigate("/manager", { replace: true });
+      } else if (user.role === "engineer") {
+        navigate("/engineer", { replace: true });
+      }
+    }
   };
+  
+
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <div className="w-80 p-6 bg-gray-100 rounded-lg shadow-lg">
-        <h2 className="text-xl font-bold text-center mb-4">
-          Login as {role?.toUpperCase()}
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
+        <h2 className="text-xl font-semibold mb-4">Login</h2>
         <input
           type="email"
           placeholder="Email"
-          className="w-full p-2 mb-3 border rounded"
+          className="mb-2 p-2 border w-full"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          className="w-full p-2 mb-4 border rounded"
+          className="mb-4 p-2 border w-full"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button
-          onClick={handleLogin}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-        >
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 w-full rounded">
           Login
         </button>
-        <button
-          onClick={() => navigate("/")}
-          className="mt-4 text-sm text-blue-500 hover:underline"
-        >
-          ← Back to Home
-        </button>
-      </div>
+      </form>
     </div>
   );
-};
+}
 
 export default Login;

@@ -1,3 +1,4 @@
+// src/pages/Dashboard.tsx
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,8 +7,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
-    if (user?.role === "manager") navigate("/manager/overview");
-    else if (user?.role === "engineer") navigate("/engineer/assignments");
+
+    if (user) {
+      // ✅ Redirect to full paths
+      if (user.role === "manager") {
+        navigate("/manager/overview", { replace: true });
+      } else if (user.role === "engineer") {
+        navigate("/engineer/assignments", { replace: true });
+      }
+    }
   }, [navigate]);
 
   return (
